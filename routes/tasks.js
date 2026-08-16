@@ -26,4 +26,8 @@ const tasks = [
     },
 ];
 
+router.get("/", (req, res) => {
+    res.status(200).json(tasks);
+});
+
 module.exports = router;
