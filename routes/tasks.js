@@ -30,4 +30,77 @@ router.get("/", (req, res) => {
     res.status(200).json(tasks);
 });
 
+router.get("/:id", (req, res) => {
+    const task = tasks.find((task) => task.id === req.params.id);
+
+    if(!task) {
+        return res.status(404).json({
+            error: "Task not found",
+        });
+    }
+
+    res.status(200).json(task);
+});
+
+router.post("/", (req, res) => {
+    const { title } = req.body;
+
+    if(!title) {
+        return res.status(400).json({
+            error: "Title is required",
+        });
+
+    }
+
+    const task = {
+        id: nanoid(),
+        title,
+        complete: false,
+        createdAt: new Date().toISOString(),
+    };
+
+    tasks.push(task);
+
+    res.status(201).json(task);
+});
+
+router.put("/:id", (req, res) => {
+    const task = task.find((task) => task.id === req.params.id);
+
+    if(!task) {
+        return res.status(404).json({
+            error: "Task not found",
+        });
+    }
+
+    const { title, complete } = req.body;
+
+    if(!title || typeof complete !== "boolean") {
+        return res.status(400).json({
+            error: "Title and complete are required"
+        });
+    }
+
+    task.title = title;
+    task.complete = complete;
+
+    res.status(200).json(task);
+});
+
+router.delete("/:id", (req, res) => {
+    const taskIndex = tasks.findIndex(
+        (task) => task.id === req.params.id
+    );
+
+    if(taskIndex === -1) {
+        return res.status(404).json({
+            error: "Task not found"
+        });
+    }
+
+    tasks.splice(taskIndex, 1);
+
+    res.status(204).send();
+});
+
 module.exports = router;
