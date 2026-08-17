@@ -87,4 +87,20 @@ router.put("/:id", (req, res) => {
     res.status(200).json(task);
 });
 
+router.delete("/:id", (req, res) => {
+    const taskIndex = tasks.findIndex(
+        (task) => task.id === req.params.id
+    );
+
+    if(taskIndex === -1) {
+        return res.status(404).json({
+            error: "Task not found"
+        });
+    }
+
+    tasks.splice(taskIndex, 1);
+
+    res.status(204).send();
+});
+
 module.exports = router;
