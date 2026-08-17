@@ -64,4 +64,27 @@ router.post("/", (req, res) => {
     res.status(201).json(task);
 });
 
+router.put("/:id", (req, res) => {
+    const task = task.find((task) => task.id === req.params.id);
+
+    if(!task) {
+        return res.status(404).json({
+            error: "Task not found",
+        });
+    }
+
+    const { title, complete } = req.body;
+
+    if(!title || typeof complete !== "boolean") {
+        return res.status(400).json({
+            error: "Title and complete are required"
+        });
+    }
+
+    task.title = title;
+    task.complete = complete;
+
+    res.status(200).json(task);
+});
+
 module.exports = router;
